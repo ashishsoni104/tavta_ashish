@@ -1,5 +1,9 @@
 @extends('layouts.app')
-
+<style type="text/css">
+    #user_table{
+        display: none;
+    }
+</style>
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -28,7 +32,7 @@
 
             </div><br/><br/>
             @if(!empty($user))
-            <table>
+            <table id="user_table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -118,10 +122,17 @@
 $(document).ready(function() { 
     $("#search_users").on("keyup", function() { 
         var value = $(this).val().toLowerCase(); 
+        if(value.length>0){
+            $('#user_table').css('display','block');
+        }else{
+            if(value.length == 0){
+                $('#user_table').css('display','none');
+            }
+        }
         $("#search_result tr").filter(function() { 
             $(this).toggle($(this).text() 
             .toLowerCase().indexOf(value) > -1) 
-        }); 
+        });  
     }); 
 }); 
 </script> 

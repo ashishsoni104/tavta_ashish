@@ -9,13 +9,11 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-
-
     <!-- Scripts -->
-    <link href="asset('asset/select2/dist/css/select2.min.css')" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{{asset('asset/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{ asset('js/app.js') }}" defer></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -85,7 +83,7 @@
 </body>
 </html>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.js-example-basic-multiple').select2();
     });
 </script>

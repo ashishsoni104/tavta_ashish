@@ -122,3 +122,16 @@
     </div>
 </div>
 @endsection
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var last_valid_selection = null;
+        $('#technology').change(function(event) {
+            if ($(this).val().length > 5) {
+                $(this).val(last_valid_selection);
+            } else {
+                last_valid_selection = $(this).val();
+            }
+        });
+    });
+</script>

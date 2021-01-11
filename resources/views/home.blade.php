@@ -80,7 +80,7 @@
                                     {{ config('app_constant.technology')[$v] }},
                                 @endforeach
                             </td>
-                            <td><a href="{{ url('/manage-status') }}/{{$val->id}}/accept">Accept</a>|<a href="{{ url('/manage-status') }}/{{$val->id}}/reject">Reject</a></td>
+                            <td><a href="{{ url('/manage-status') }}/{{$val->id}}/accept">Accept</a>|<a href="{{ url('/manage-status') }}/{{ $val->id }}/reject">Reject</a></td>
                         </tr>
                     @endforeach
                 </tbody>

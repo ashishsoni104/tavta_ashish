@@ -53,15 +53,14 @@ class HomeController extends Controller
 
     public function pendingRequest(){
         $user_id = Auth::user()->id;
-        $connectionUsers = ConnectionUsers::select('request_user_id')
-                                          ->where('sender_user_id',$user_id)
+        $connectionUsers = ConnectionUsers::select('sender_user_id')
+                                          ->where('request_user_id',$user_id)
                                           ->where('status',0)
                                           ->get();
         $pendingUsers = [];                                  
         if($connectionUsers && $connectionUsers->count()>0){
-            $connectionUserArr = array_column($connectionUsers->toArray(), "request_user_id");
+            $connectionUserArr = array_column($connectionUsers->toArray(), "sender_user_id");
             $pendingUsers = User::whereIn('id',$connectionUserArr)
-                                ->where('id','!=',$user_id)
                                 ->get();
         }                                  
         return view('home',compact('pendingUsers'));   
@@ -69,16 +68,29 @@ class HomeController extends Controller
 
     public function myConnection(){
         $user_id = Auth::user()->id;
-        $connectionUsers = ConnectionUsers::select('request_user_id')
-                                          ->where('sender_user_id',$user_id)
+        $connectionUsers = ConnectionUsers::select('sender_user_id','request_user_id')
+                                          ->where('request_user_id',$user_id)
+                                          ->Orwhere('sender_user_id',$user_id)
                                           ->where('status',1)
                                           ->get();
         $myConnection = [];                                  
         if($connectionUsers && $connectionUsers->count()>0){
-            $connectionUserArr = array_column($connectionUsers->toArray(), "request_user_id");
-            $myConnection = User::whereIn('id',$connectionUserArr)
-                    ->where('id','!=',$user_id)
-                    ->get();
+            $arrData = [];
+            
+            $requestUserIds = array_column($connectionUsers->toArray(), "sender_user_id");
+            $senderUserIds = array_column($connectionUsers->toArray(), "request_user_id");
+            if (($key = array_search($user_id, $requestUserIds)) !== false) {
+                unset($requestUserIds[$key]);
+                $requestUserIds = array_values($requestUserIds);
+            }
+            if (($key = array_search($user_id, $senderUserIds)) !== false) {
+                unset($senderUserIds[$key]);
+                $senderUserIds = array_values($senderUserIds);
+
+            }
+            array_push($arrData,$requestUserIds);
+            array_push($arrData,$senderUserIds);
+            $myConnection = User::whereIn('id',$arrData)->get();
         }                                  
                 
         return view('home',compact('myConnection'));   
@@ -86,8 +98,8 @@ class HomeController extends Controller
 
     public function acceptRejectRequest($request_user_id,$type){
         $user_id = Auth::user()->id;
-        $connectionUser = ConnectionUsers::where('sender_user_id',$user_id)
-                        ->where('request_user_id',$request_user_id)
+        $connectionUser = ConnectionUsers::where('request_user_id',$user_id)
+                        ->where('sender_user_id',$request_user_id)
                         ->first();
         $message = '';
         if($connectionUser && $connectionUser->count()>0){
